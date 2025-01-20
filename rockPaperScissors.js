@@ -1,64 +1,77 @@
-const words = ['rock', 'paper', 'scissors']
-function getComputerChoice(){
-    const getRandomWord = Math.floor(Math.random() * words.length);
-    if(getRandomWord === 0){
-        return "rock";
-        }
-        else if(getRandomWord === 1){
-            return "paper"
-    }else{
-        return "scissors";
-    }
+const words = ["rock", "paper", "scissors"];
+function getComputerChoice() {
+  const getRandomWord = Math.floor(Math.random() * words.length);
+  return words[getRandomWord];
 }
 
-console.log(getComputerChoice())
+let humanScore = 0;
+let computerScore = 0;
 
-
-function getHumanChoice (){
-
-    const userChoice = prompt('your choice').toLowerCase()
-
-    if(words.includes(userChoice)){
-        return userChoice
-    }else{
-        return 'word not in array'
-    }
-
+function updateScoreDisplay() {
+  const scoreDisplay = document.getElementById("scoreDisplay");
+  scoreDisplay.innerHTML = `Scores : Human: ${humanScore}, Computer: ${computerScore}`;
 }
 
-
-
-// console.log(getHumanChoice())
-
-
-const humanScore = 0
-const computerScore = 0
-
-function playRound(humanChoice, computerChoice){
-    const rules = {
-        rock: { beats: 'scissors' },
-        paper: { beats: 'rock' },
-        scissors: { beats: 'paper' }
-    };
-    console.log(rules[humanChoice])
-    if (humanChoice === computerChoice) {
-        return "It's a tie!";
-    }
-
-    if ( rules[humanChoice] && rules[humanChoice].beats === computerChoice) {
-        return "Human wins!";
-    } else {
-        return "Computer wins!";
-    }
-
+function checkWinner() {
+  const displayResults = document.getElementById("displayResults");
+  if (humanScore === 5) {
+    displayResults.innerHTML = " Human wins the game!";
+    resetGame();
+  } else if (computerScore === 5) {
+    displayResults.innerHTML = " Computer wins the game!";
+    resetGame();
+  }
 }
 
-const humanSelection = getHumanChoice();
-const computerSelection = getComputerChoice();
+function resetGame() {
+  humanScore = 0;
+  computerScore = 0;
+  updateScoreDisplay();
+}
 
-console.log(playRound(humanSelection, computerSelection))
+function playRound(humanChoice) {
+  const computerChoice = getComputerChoice();
 
+  const rules = {
+    rock: { beats: "scissors" },
+    paper: { beats: "rock" },
+    scissors: { beats: "paper" },
+  };
 
- function playGame(humanChoice, computerChoice){
+  let messageResult = `Human: ${humanChoice}, Computer: ${computerChoice}`;
 
- }
+  if (humanChoice === computerChoice) {
+    messageResult += "It's a tie!";
+    return;
+  }
+
+  if (rules[humanChoice].beats === computerChoice) {
+    humanScore++;
+    messageResult += "Human wins!";
+  } else {
+    computerScore++;
+    messageResult += "Computer wins!";
+  }
+
+  displayResults.innerHTML = messageResult;
+  updateScoreDisplay();
+  checkWinner();
+}
+
+const rockButton = document.getElementById("rockButton");
+const paperButton = document.getElementById("paperButton");
+const scissorsButton = document.getElementById("scissorsButton");
+
+rockButton.addEventListener("click", function () {
+  playRound("rock");
+});
+
+paperButton.addEventListener("click", function () {
+  playRound("paper");
+});
+
+scissorsButton.addEventListener("click", function () {
+  playRound("scissors");
+});
+
+updateScoreDisplay();
